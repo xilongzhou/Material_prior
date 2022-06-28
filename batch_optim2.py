@@ -65,8 +65,8 @@ for idx, myclass in enumerate(os.listdir(folder_path)):
 	print('my class is ', myclass)
 
 	for in_img in os.listdir(os.path.join(folder_path,myclass)):
-		if 'stone_wall_2' not in in_img:
-			continue
+		# if 'stone_wall_2' not in in_img:
+		# 	continue
 
 		folder_name = in_img.split('.')[0]
 
