@@ -21,7 +21,7 @@ parser.add_argument('--loss', type=str, default='TD+16L1', help='loss function: 
 parser.add_argument('--target', type=str, default='wood', help='save files directory')        
 parser.add_argument('--ckpt_dir', type=str, default='wood', help='save files directory')        
 parser.add_argument('--run_option', type=str, default='opt_ed_te', help='opt | ed | opt_ed || opt_ed_te')        
-parser.add_argument('--load_option', type=str, default='rand', help='class | rand || rand: randomly select from each class; class (not use): per substance') 
+parser.add_argument('--load_option', type=str, default='rand', help='class | rand || cust || rand: randomly select from each class; class (not use): per substance; cust: specify pat path') 
 parser.add_argument('--load_ckpt_option', type=str, default='NA', help=' NA | net | pat | netpat || NA: no load ckpt; net: load network; pat: load pattern only; netpat: load both net and pat')        
 
 
@@ -65,10 +65,6 @@ for idx, myclass in enumerate(os.listdir(folder_path)):
 	print('my class is ', myclass)
 
 	for in_img in os.listdir(os.path.join(folder_path,myclass)):
-		# if 'stone_wall_2' not in in_img:
-		# 	continue
-
-		folder_name = in_img.split('.')[0]
 
 		# repeat 5 times for each example
 		for k in range(1):
@@ -78,7 +74,6 @@ for idx, myclass in enumerate(os.listdir(folder_path)):
 
 				cmd = 'python train.py' \
 					+ ' --checkpoints_dir ' + './ckpt/'+opt.ckpt_dir \
-					+ ' --folder ' + folder_name \
 					+ ' --lr ' + str(opt.lr) \
 					+ ' --res ' + str(opt.res) \
 					+ ' --lambda_L1 ' + str(opt.w_L1) \
@@ -106,7 +101,6 @@ for idx, myclass in enumerate(os.listdir(folder_path)):
 
 				cmd = 'python train.py' \
 					+ ' --checkpoints_dir ' + './ckpt/'+opt.ckpt_dir \
-					+ ' --folder ' + folder_name \
 					+ ' --lr ' + str(0.005) \
 					+ ' --res ' + str(opt.res) \
 					+ ' --lambda_L1 ' + str(opt.w_L1) \
@@ -137,7 +131,6 @@ for idx, myclass in enumerate(os.listdir(folder_path)):
 
 				cmd = 'python train.py' \
 					+ ' --checkpoints_dir ' + './ckpt/'+opt.ckpt_dir \
-					+ ' --folder ' + folder_name \
 					+ ' --lr ' + str(opt.lr) \
 					+ ' --lambda_L1 ' + str(opt.w_L1) \
 					+ ' --w_edit ' + str(opt.w_edit) \

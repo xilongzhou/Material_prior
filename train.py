@@ -65,6 +65,7 @@ def load_input_rand(opt):
 				common_pat_namelist.append(select_pat)
 		else:
 			common_pat_namelist.append(select_pat)
+
 	for i in common_pat_namelist:
 		ext = os.path.splitext(i)[1]
 		if ext not in img_format:
@@ -164,114 +165,40 @@ def load_input_rand(opt):
 	return concat_in_pat, concat_in_img, common_pat_namelist+class_pat_namelist
 
 
-def load_input_class(opt, test=False):
+def load_custom(opt):
 
-	img_format = ['.png', '.jpg', '.jpeg']
-	in_pat_path = opt.in_pat_path
-	in_img_path = opt.in_img_path
+	# load imag
+	temp_img = read_image(join(in_img_path,opt.in_img))
+	if temp_img.shape[0] != opt.res:
+		temp_in = torch.from_numpy(resize(temp_img, (opt.res,opt.res), anti_aliasing=True))
+	else:		
+		temp_in = torch.from_numpy(temp_img)
+	image_in = temp_in.permute(2,0,1) #[W,H,C]->[C,W,H]
+	print(f"loading image done {opt.in_img} ......")
 
-	# load patterns only if test
-	if test:
-		N_test = 4
-		rand_pat = random.sample(os.listdir(in_pat_path), k=N_test)
-		concat_in_pat = torch.empty(0)
-		all_pats = torch.empty(0)
-
-		for k in range(N_test):
-			for i in os.listdir(os.path.join(in_pat_path, rand_pat[k])):
-				## only load images with png and jpg
-				ext = os.path.splitext(i)[1]
-				if ext not in img_format:
-					continue
-				## resize image if needed
-				temp_pat = read_image(join(in_pat_path, rand_pat[k],i))
-				if temp_pat.shape[0] != opt.res:
-					temp_in = torch.from_numpy(resize(temp_pat, (opt.res, opt.res), anti_aliasing=True))
-				else:		
-					temp_in = torch.from_numpy(temp_pat)
-				# gray scale image
-				if len(temp_in.shape)==2:
-					temp_in = temp_in.unsqueeze(-1)
-				# colro image, remove alpha if necessary
-				else:
-					temp_in = temp_in[:,:,:1]
-
-				if temp_in.shape[0] != opt.res:
-					temp_in = resize(temp_in, (opt.res, opt.res), anti_aliasing=True)
-
-				concat_in_pat = torch.cat((concat_in_pat,temp_in),dim=-1)
-
-			concat_in_pat = concat_in_pat.permute(2,0,1).unsqueeze(0) #[W,H,C]->[C,W,H]
-			print(all_pats.shape)
-			all_pats = torch.cat((all_pats,concat_in_pat),dim=0)
-			print(concat_in_pat.shape)
-			print(all_pats.shape)
-
-			concat_in_pat = torch.empty(0)
-
-
-		return all_pats
-
-	# load both patterns and images only if test
-	else:
-		rand_pat = random.choice(os.listdir(in_pat_path))
-		concat_in_pat = torch.empty(0)
-		print(rand_pat)
-		for i in os.listdir(os.path.join(in_pat_path, rand_pat)):
-			## only load images with png and jpg
-			ext = os.path.splitext(i)[1]
-			if ext not in img_format:
-				continue
-			## resize image if needed
-			temp_pat = read_image(join(in_pat_path, rand_pat,i))
-			if temp_pat.shape[0] != opt.res:
-				temp_in = torch.from_numpy(resize(temp_pat, (opt.res, opt.res), anti_aliasing=True))
-			else:		
-				temp_in = torch.from_numpy(temp_pat)
-			# gray scale image
-			if len(temp_in.shape)==2:
-				temp_in = temp_in.unsqueeze(-1)
-			# colro image, remove alpha if necessary
-			else:
-				temp_in = temp_in[:,:,:1]
-
-			if temp_in.shape[0] != opt.res:
-				temp_in = resize(temp_in, (opt.res, opt.res), anti_aliasing=True)
-
-			concat_in_pat = torch.cat((concat_in_pat,temp_in),dim=-1)
-
-			print('concat_in_pat: ', concat_in_pat.shape)
-
-
-		concat_in_pat = concat_in_pat.permute(2,0,1) #[W,H,C]->[C,W,H]
-
-		################## loading image list ##################
-		in_img_list = ['%s' % opt.in_img]
-
-		concat_in_img = torch.empty(0)
-
+	# load patterns
+	concat_in_pat = torch.empty(0)
+	for pat in opt.in_pat_path:
+		ext = os.path.splitext(i)[1]
+		if ext not in img_format:
+			continue
 		## resize image if needed
-		temp_img = read_image(join(in_img_path, opt.in_img))
-		if temp_img.shape[0] != opt.res:
-			temp_in = torch.from_numpy(resize(temp_img, (opt.res,opt.res), anti_aliasing=True))
+		temp_in = read_image(join(opt.in_pat_path,pat))
+		if temp_in.shape[0] != opt.res:
+			temp_in = torch.from_numpy(resize(temp_in, (opt.res, opt.res), anti_aliasing=True))
 		else:		
-			temp_in = torch.from_numpy(temp_img)
+			temp_in = torch.from_numpy(temp_in)
 
 		# gray scale image
 		if len(temp_in.shape)==2:
 			temp_in = temp_in.unsqueeze(-1)
-		# colro image, remove alpha if necessary
-		elif len(temp_in.shape)==3 and temp_in.shape[-1]==4:
-			temp_in = temp_in[:,:,:3]
+		else:
+			temp_in = temp_in[:,:,:1]
+		concat_in_pat = torch.cat((concat_in_pat,temp_in),dim=-1)
 
-		concat_in_img = torch.cat((concat_in_img,temp_in),dim=-1)
-		
-
-		print('in img shape: ', concat_in_img.shape)
-		concat_in_img = concat_in_img.permute(2,0,1) #[W,H,C]->[C,W,H]
-
-		return concat_in_pat, concat_in_img
-
+	concat_in_pat = concat_in_pat.permute(2,0,1) #[W,H,C]->[C,W,H]
+	print(f"loading patterns done {opt.in_img} ......")
+	return concat_in_pat, image_in
 
 def load_edit(opt, test=False):
 
@@ -867,11 +794,15 @@ def filter_opt(opt):
 	if opt.edit or opt.resume or opt.test:
 		opt.load_ckpt = join(opt.checkpoints_dir, opt.myclass, opt.name2+ '_'+opt.load_pf)
 
-	opt.in_img_path = os.path.join(opt.real_root_path, opt.myclass)
 	if opt.load_option=='rand':
+		opt.in_img_path = os.path.join(opt.real_root_path, opt.myclass)
 		opt.in_pat_path = os.path.join('./data/Patterns2/rand_pat', opt.myclass)
-	else:
-		opt.in_pat_path = os.path.join('./data/Patterns2/class_pat', opt.myclass)
+	elif opt.load_option=='cust':
+		opt.in_img_path = opt.real_root_path
+
+	if opt.myclass=='tiles':
+		opt.N_common = 3
+		opt.N_class = 1
 
 if __name__ == "__main__":
 
@@ -897,10 +828,8 @@ if __name__ == "__main__":
 	if opt.load_ckpt != '':
 		print(opt.load_ckpt)
 		# input patterns for optimization
-		if opt.load_option=='class':
-			in_patterns_tr, in_imgs = load_input_class(opt)
-		elif opt.load_option=='rand':
-			_, in_imgs, inpat_namelist = load_input_rand(opt)
+		if opt.load_option=='rand':
+			_, in_imgs, _ = load_input_rand(opt)
 		elif opt.load_option=='highres':
 			in_patterns, in_imgs = load_input_highres(opt, path = './data/Patterns2/highres_pat/highres')
 			in_patterns = in_patterns.to(device).unsqueeze(0)
@@ -915,14 +844,14 @@ if __name__ == "__main__":
 
 	else:
 		# load input
-		if opt.load_option=='class':
-			in_patterns_tr, in_imgs = load_input_class(opt)
-		elif opt.load_option=='rand':
-			in_patterns_tr, in_imgs, inpat_namelist = load_input_rand(opt)
+		if opt.load_option=='rand':
+			in_patterns_tr, in_imgs, _ = load_input_rand(opt)
 		elif opt.load_option=='highres':
 			in_patterns_tr, in_imgs = load_input_highres(opt, path = './data/Patterns2/highres_pat/lowres')
+		elif opt.load_option=="cust":
+			in_patterns_tr, in_imgs = load_custom()
 
-		# path to saave pattern
+		# path to save pattern
 		save_pat_path = join(opt.checkpoints_dir, opt.myclass, opt.name2+'_'+opt.name_pf,'inpat.pt')
 		torch.save(in_patterns_tr, save_pat_path)
 
