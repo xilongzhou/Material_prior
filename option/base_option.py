@@ -20,6 +20,7 @@ class BaseOptions():
 		self.parser.add_argument('--load_option', type=str, default='', help='class | rand || load pattern based on class or rand')        
 		self.parser.add_argument('--load_ckpt_option', type=str, default='', help=' net || pat || netpat')        
 		self.parser.add_argument('--real_root_path', type=str, default='', help='real_root_path')        
+		self.parser.add_argument('--in_pat_path', type=str, default='', help='path of pat')        
 		self.parser.add_argument('--aug_inpats', action='store_true', help='augmentation of inputs or not')
 		self.parser.add_argument('--aug_traindata', action='store_true', help='augmentation of trainning dataset of encoder or not')
 		self.parser.add_argument('--batch_size', type=int, default=1, help='the batch size of training the encoder')        

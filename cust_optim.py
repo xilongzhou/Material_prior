@@ -21,7 +21,7 @@ parser.add_argument('--loss', type=str, default='TD+16L1', help='loss function: 
 parser.add_argument('--target', type=str, default='wood', help='save files directory')        
 parser.add_argument('--ckpt_dir', type=str, default='wood', help='save files directory')        
 parser.add_argument('--run_option', type=str, default='opt_ed_te', help='opt | ed | opt_ed || opt_ed_te')        
-parser.add_argument('--in_path_path', type=str, default='./data/Patterns2', help='the path for input patters') 
+parser.add_argument('--in_pat_path', type=str, default='./data/Patterns2', help='the path for input patters') 
 parser.add_argument('--in_img_path', type=str, default='./data/MyReal2', help='the path for input images') 
 parser.add_argument('--load_ckpt_option', type=str, default='NA', help=' NA | net | pat | netpat || NA: no load ckpt; net: load network; pat: load pattern only; netpat: load both net and pat')        
 
@@ -78,7 +78,7 @@ for idx, img in enumerate(os.listdir(folder_path)):
 				+ ' --name_pf ' + name_pf + '_rand_'+str(k) \
 				+ ' --load_pf ' + load_pf + '_rand_'+str(k) \
 				+ ' --load_option cust' \
-				+ ' --in_path_path ' + opt.in_path_path \
+				+ ' --in_pat_path ' + opt.in_pat_path \
 				+ ' --load_ckpt_option ' + opt.load_ckpt_option \
 				+ ' --pixconv_n ' + str(opt.pixconv_n) \
 				+ ' --ngf ' + str(opt.ngf) \

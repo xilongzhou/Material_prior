@@ -168,7 +168,7 @@ def load_input_rand(opt):
 def load_custom(opt):
 
 	# load imag
-	temp_img = read_image(join(in_img_path,opt.in_img))
+	temp_img = read_image(join(opt.in_img_path,opt.in_img))
 	if temp_img.shape[0] != opt.res:
 		temp_in = torch.from_numpy(resize(temp_img, (opt.res,opt.res), anti_aliasing=True))
 	else:		
@@ -178,10 +178,8 @@ def load_custom(opt):
 
 	# load patterns
 	concat_in_pat = torch.empty(0)
-	for pat in opt.in_pat_path:
-		ext = os.path.splitext(i)[1]
-		if ext not in img_format:
-			continue
+	for pat in os.listdir(opt.in_pat_path):
+
 		## resize image if needed
 		temp_in = read_image(join(opt.in_pat_path,pat))
 		if temp_in.shape[0] != opt.res:
@@ -849,7 +847,7 @@ if __name__ == "__main__":
 		elif opt.load_option=='highres':
 			in_patterns_tr, in_imgs = load_input_highres(opt, path = './data/Patterns2/highres_pat/lowres')
 		elif opt.load_option=="cust":
-			in_patterns_tr, in_imgs = load_custom()
+			in_patterns_tr, in_imgs = load_custom(opt)
 
 		# path to save pattern
 		save_pat_path = join(opt.checkpoints_dir, opt.myclass, opt.name2+'_'+opt.name_pf,'inpat.pt')
