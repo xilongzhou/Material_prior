@@ -39,7 +39,7 @@ If you find this work useful for your research, please cite:
 
 @inproceedings{zhou2023semi,
   title={A Semi-Procedural Convolutional Material Prior},
-  author={Zhou, Xilong and Ha{\v{s}}an, Milo{\v{s}} and Deschaintre, Valentin and Guerrero, Paul and Sunkavalli, Kalyan and Kalantari, Nima Khademi},
+  author={Zhou, Xilong and Hasan, Milos and Deschaintre, Valentin and Guerrero, Paul and Sunkavalli, Kalyan and Kalantari, Nima Khademi},
   booktitle={Computer Graphics Forum},
   year={2023},
   organization={Wiley Online Library}
