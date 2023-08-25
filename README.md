@@ -1,6 +1,15 @@
-Code of Mateiral Prior:
+# A Semi-Procedural Convolutional Material Prior (Eurographics 2023)
+
+This is code of "A Semi-Procedural Convolutional Material Prior" [Project](https://people.engr.tamu.edu/nimak/Papers/CGF2023_MaterialPrior/index.html) | [Paper](https://people.engr.tamu.edu/nimak/Papers/CGF2023_MaterialPrior/CGF2023_MaterialPrior.pdf)
+
+<img src='representation.jpg'>
+
+## Requirements
 
 set up environment using `environment.yml`  or build up your own environment
+
+
+## Running
 
 To run using our provided data and pattern, run this script:
 
@@ -21,3 +30,22 @@ python cust_optim.py --name_pf $filename --ckpt_dir $foldername --loss TD+32L1 -
 ```
 
 where `$imgpath` and `$patpath` are the specified path of image and patterns, all the patterns in this directory will be used as input to the network
+
+## Citation
+
+If you find this work useful for your research, please cite:
+
+```
+
+@inproceedings{zhou2023semi,
+  title={A Semi-Procedural Convolutional Material Prior},
+  author={Zhou, Xilong and Ha{\v{s}}an, Milo{\v{s}} and Deschaintre, Valentin and Guerrero, Paul and Sunkavalli, Kalyan and Kalantari, Nima Khademi},
+  booktitle={Computer Graphics Forum},
+  year={2023},
+  organization={Wiley Online Library}
+}
+```
+
+## Contact
+
+Please contact Xilong Zhou (1992zhouxilong@gmail.com) if there are any issues/comments/questions.
